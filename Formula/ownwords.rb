@@ -3,6 +3,7 @@ class Ownwords < Formula
   homepage "https://github.com/synthesiswriting/ownwords"
   url "https://github.com/synthesiswriting/ownwords/releases/download/v1.6.1/ownwords-1.6.1.tgz"
   sha256 "cbcb9cf6982a7ab2003970aec640b87a2a736c392a0452c00cf9d3f7942cc8da"
+  revision 1
   license "MIT"
   depends_on "node"
   depends_on "git"
@@ -10,7 +11,7 @@ class Ownwords < Formula
   def install
     libexec.install Dir["*"]
     (bin/"ownwords").write_env_script libexec/"bin/ownwords.js",
-      PATH: "#{Formula["node"].opt_bin}:#{ENV["PATH"]}",
+      PATH: "#{Formula["node"].opt_bin}:#{Formula["git"].opt_bin}:$PATH",
       SYNTHESIS_BOOTSTRAP_PYTHON: "#{Formula["python@3.12"].opt_bin}/python3.12"
   end
   test do
