@@ -1,0 +1,41 @@
+name: Formula acceptance
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  formulas:
+    env:
+      HOMEBREW_NO_AUTO_UPDATE: "1"
+      HOMEBREW_NO_INSTALL_CLEANUP: "1"
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - id: homebrew
+        uses: Homebrew/actions/setup-homebrew@1f8e202ffddf94def7f42f6fa3a482e821489f9c
+        with:
+          stable: true
+      - name: Verify the checked-out tap and use individual formula trust
+        env:
+          TAP_PATH: ${{ steps.homebrew.outputs.repository-path }}
+        run: |
+          cd "$TAP_PATH"
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test -z "$(git status --porcelain)"
+          brew untrust synthesisengineering/tap
+      - name: Install and exercise each immutable artifact
+        run: |
+          for formula in synthesis slopcheck synthesis-console ownwords; do
+            if [ "$formula" = synthesis-console ]; then
+              brew install oven-sh/bun/bun "synthesisengineering/tap/$formula"
+            else
+              brew install "synthesisengineering/tap/$formula"
+            fi
+            brew test "synthesisengineering/tap/$formula"
+          done
