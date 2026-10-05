@@ -1,8 +1,8 @@
 class SynthesisConsole < Formula
   desc "Local project console for the Synthesis ecosystem"
   homepage "https://synthesiswork.org/download/"
-  url "https://github.com/synthesisengineering/synthesis-console/releases/download/v1.6.1/synthesis-console-1.6.1.tar.gz"
-  sha256 "281cc582809e0397dabbb4c72d3d25f7a6d3af4835a3db1b016f4d5ee13169c2"
+  url "https://github.com/synthesisengineering/synthesis-console/releases/download/v1.6.2/synthesis-console-1.6.2.tar.gz"
+  sha256 "0a7cec07ba6265e8203952e203f2434967c538c8e742aecc45aa5727d606e938"
   license "Apache-2.0"
   depends_on "oven-sh/bun/bun"
   depends_on "git"
@@ -14,7 +14,7 @@ class SynthesisConsole < Formula
       SYNTHESIS_BOOTSTRAP_PYTHON: Formula["python@3.12"].opt_bin/"python3.12"
   end
   test do
-    assert_match "1.6.1", shell_output("#{bin}/synthesis-console --version")
+    assert_match "1.6.2", shell_output("#{bin}/synthesis-console --version")
     assert_match "autostart", shell_output("#{bin}/synthesis-console --help")
   end
 end
