@@ -1,18 +1,33 @@
 class Synthesis < Formula
-  desc "Verified installation and lifecycle for the Synthesis ecosystem"
+  desc "Synthesis work system: skills, guards and project coordination for AI coding agents"
   homepage "https://synthesiswork.org/download/"
-  url "https://github.com/synthesisengineering/synthesis-skills/releases/download/v4.149.7/synthesis-4.149.7.tar.gz"
-  sha256 "7be8eb092c370890c3ba4274121c04e1c51cb0db6e6213b3ef62854a5fe9af7f"
+  url "https://github.com/synthesisengineering/synthesis-skills/archive/refs/tags/v5.0.3.tar.gz"
+  sha256 "4ea2592feaf1d8664a210205d636d8fdf404c1d094675adfe0ef14f441dd73e4"
   license "Apache-2.0"
   depends_on "git"
-  depends_on "python@3.12"
+
+  # v5 installs its own `synthesis` command (~/.local/bin/synthesis, linked to the runtime the
+  # plugin keeps current), so this formula ships only the launcher that runs the onboarding.
+  # A second `synthesis` here would shadow or diverge from the runtime the harnesses use.
   def install
-    libexec.install Dir["*"]
-    (bin/"synthesis").write_env_script libexec/"bin/synthesis",
-      SYNTHESIS_BOOTSTRAP_PYTHON: Formula["python@3.12"].opt_bin/"python3.12"
+    libexec.install "onboard.sh"
+    (bin/"synthesis-onboard").write <<~SH
+      #!/bin/sh
+      exec /bin/sh "#{libexec}/onboard.sh" "$@"
+    SH
   end
+
+  def caveats
+    <<~EOS
+      Install the plugin in Claude Code, Codex and Muse, the runtime and the `synthesis` command:
+        synthesis-onboard
+      Then restart each app, and approve the synthesis hooks in Codex (/hooks) and in Muse
+      (muse plugins approve synthesis-skills). `synthesis doctor` checks the result.
+    EOS
+  end
+
   test do
-    assert_match "4.149.7", shell_output("#{bin}/synthesis --version")
-    assert_match "--profile", shell_output("#{bin}/synthesis --help")
+    assert_predicate libexec/"onboard.sh", :exist?
+    assert_match "onboard.sh", (bin/"synthesis-onboard").read
   end
 end
