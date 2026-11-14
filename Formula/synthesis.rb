@@ -1,8 +1,8 @@
 class Synthesis < Formula
   desc "Synthesis work system: skills, guards and project coordination for AI coding agents"
   homepage "https://synthesiswork.org/download/"
-  url "https://github.com/synthesisengineering/synthesis-skills/archive/refs/tags/v5.20.1.tar.gz"
-  sha256 "27d630a87bad73a2f11c3c8ad5646d6c0d4e1114531bb45a4f8f6afc1f16f1a3"
+  url "https://github.com/synthesisengineering/synthesis-skills/archive/refs/tags/v5.21.0.tar.gz"
+  sha256 "35da7bdbc957ec94aa1cefb930c9e5a1e0cc4855d9b9e420cf5a1530ecee1705"
   license "Apache-2.0"
   depends_on "git"
 
